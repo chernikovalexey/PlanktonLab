@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -7,10 +8,14 @@ import java.util.Scanner;
  */
 
 public class Main {
-    private ArrayList<String> commands = new ArrayList<String>(){{
+    private static ArrayList<String> commands = new ArrayList<String>(){{
         add("addfac");
         add("editfac");
         add("delfac");
+    }};
+
+    public static HashMap<String, Class<? extends Entity>> classes = new HashMap<String,Class<? extends Entity>>(){{
+        put("faculties", Faculty.class);
     }};
 
     public static void main(String[] args) {
@@ -19,7 +24,9 @@ public class Main {
         boolean isCommand = true;
         while(scanner.hasNextLine()) {
             String command = scanner.nextLine();
+            if(commands.indexOf(command.substring(1)) > -1) {
 
+            }
         }
     }
 }

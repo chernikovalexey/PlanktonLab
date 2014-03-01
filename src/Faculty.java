@@ -1,7 +1,8 @@
 /**
  * Created by Alexey
- * At 6:48 PM on 3/1/14
+ * At 7:07 PM on 3/1/14
  */
 
-public class Faculty {
+public class Faculty extends Entity {
+
 }
