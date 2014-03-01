@@ -1,3 +1,7 @@
+package lab.storage;
+
+import lab.entity.Entity;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,16 +13,16 @@ import java.util.ArrayList;
  * At 6:57 PM on 3/1/14
  */
 
-public class Storage {
-    private String fileName;
+public abstract class Storage {
+    protected String fileName;
     public ArrayList<Entity> entities = new ArrayList<Entity>();
-    private Entity entityInstance;
+    protected Entity entityInstance;
 
-    public Storage(String fileName) {
+    public Storage(String fileName, Class<? extends Entity> clazz) {
         this.fileName = fileName;
 
         try {
-            this.entityInstance = Main.classes.get(fileName).newInstance();
+            this.entityInstance = clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,7 +30,7 @@ public class Storage {
 
     public void load() {
         try {
-            FileReader fr = new FileReader("res/" + fileName + ".dat");
+            FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
             String line;
 
@@ -42,7 +46,30 @@ public class Storage {
     }
 
     public void addEntityFromLine(String line) {
-        entities.add(entityInstance.createInstanceFromLine(line));
+        Entity entity = entityInstance.createInstanceFromLine(line);
+        entities.add(entity);
+    }
+
+    public void add() {
+    }
+
+    public void edit() {
+    }
+
+    public void delete() {
+    }
+
+    public int getNewId() {
+        return entities.size() > 0 ? entities.get(entities.size() - 1).getId() + 1 : 1;
+    }
+
+    public Entity findByName(String name) {
+        for (Entity e : entities) {
+            if (e.getName().equals(name)) {
+                return e;
+            }
+        }
+        return null;
     }
 
     public void save() {
@@ -51,7 +78,7 @@ public class Storage {
             writer.write("");
 
             for (Entity entity : entities) {
-                writer.write(entity.toString());
+                writer.println(entity.toString());
             }
 
             writer.close();

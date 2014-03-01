@@ -1,12 +1,13 @@
+package lab.entity;
+
+import lab.Main;
+
 /**
  * Created by Alexey
  * At 7:07 PM on 3/1/14
  */
 
 public class Faculty extends Entity {
-    private int id;
-    private String name;
-
     public Faculty() {}
 
     public Faculty(int id, String name) {
