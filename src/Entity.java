@@ -4,6 +4,9 @@
  */
 
 public abstract class Entity {
-    public void read(){
+    public Entity() {}
+
+    public Entity createInstanceFromLine(String line) {
+        return null;
     }
 }

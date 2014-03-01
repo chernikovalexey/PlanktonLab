@@ -4,7 +4,7 @@
  */
 
 public class FacultyStorage extends Storage {
-    public FacultyStorage(String fileName) {
+    public FacultyStorage() {
         super("faculties");
     }
 }
