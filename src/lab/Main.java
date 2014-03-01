@@ -1,11 +1,11 @@
 package lab;
 
 import lab.entity.Entity;
-import lab.entity.Faculty;
-import lab.entity.Lectorn;
 import lab.storage.FacultyStorage;
 import lab.storage.LectornStorage;
 import lab.storage.Storage;
+import lab.storage.StudentStorage;
+import lab.storage.TeacherStorage;
 
 import java.util.HashMap;
 import java.util.Scanner;
@@ -19,6 +19,8 @@ public class Main {
     public static HashMap<String, Storage> storages = new HashMap<String, Storage>() {{
         put("faculty", new FacultyStorage());
         put("lectorn", new LectornStorage());
+        put("student", new StudentStorage());
+        put("teacher", new TeacherStorage());
     }};
 
     public static String joinArray(String[] arr, String with, int fromIndex) {
