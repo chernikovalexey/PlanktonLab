@@ -50,26 +50,48 @@ public abstract class Storage {
         entities.add(entity);
     }
 
-    public void add() {
-    }
+	public void printEntity(Entity ent) {
+		//System.out.println(entityInstance + "_");
+        entityInstance.printEntity(ent);
+	}
 
-    public void edit() {
-    }
+    public void add() {}
 
-    public void delete() {
-    }
+    public void edit() {}
+
+    public void delete() {}
 
     public int getNewId() {
         return entities.size() > 0 ? entities.get(entities.size() - 1).getId() + 1 : 1;
     }
 
     public Entity findByName(String name) {
+       //entities
         for (Entity e : entities) {
             if (e.getName().equals(name)) {
                 return e;
             }
         }
         return null;
+    }
+    
+    public Entity findById(int id) {
+        //entities
+         for (Entity e : entities) {
+             if (e.getId() == id) {
+                 return e;
+             }
+         }
+         return null;
+     }
+
+    public void printSort(ArrayList<Entity> entities) {
+    	int i=0;
+    	
+        for (Entity entity : entities) {
+            System.out.print(++i +") ");
+            printEntity(entity);
+        }
     }
 
     public void save() {

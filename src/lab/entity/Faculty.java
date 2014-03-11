@@ -20,6 +20,15 @@ public class Faculty extends Entity {
         String[] parts = line.split(" ");
         return new Faculty(Integer.parseInt(parts[0]), Main.joinArray(parts, " ", 1));
     }
+    
+    @Override
+    public void printEntity(Entity entity) {
+    	if (entity == null) return;
+    	
+    	Faculty fac = (Faculty) entity;
+
+    	System.out.println(fac.getName());
+    }
 
     @Override
     public String toString() {

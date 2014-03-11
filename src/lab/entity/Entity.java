@@ -26,4 +26,8 @@ public abstract class Entity {
     public void setName(String name) {
         this.name = name;
     }
+
+	public void printEntity(Entity entity) {
+		System.out.println(entity.toString());
+	}
 }

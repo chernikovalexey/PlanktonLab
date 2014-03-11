@@ -27,6 +27,20 @@ public class Lectorn extends Entity {
     public void setFaculty(int faculty) {
         this.faculty = faculty;
     }
+    
+    public int getFaculty() {
+    	return faculty;
+    }
+    
+    @Override
+    public void printEntity(Entity entity) {
+    	if (entity == null) return;
+    	
+    	Lectorn lect = (Lectorn) entity;
+    	Entity fac = Main.storages.get("faculty").findById(lect.getFaculty());
+
+    	System.out.println("faculty: " + (fac == null ? lect.getFaculty() : fac.getName()) + ", lectorn: " + lect.getName());
+    }
 
     @Override
     public String toString() {
