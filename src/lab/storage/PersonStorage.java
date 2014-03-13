@@ -7,6 +7,7 @@ import lab.entity.Person;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
 public class PersonStorage extends Storage {
     {
@@ -106,6 +107,16 @@ public class PersonStorage extends Storage {
 
         for (Person s : people) {
             s.print();
+        }
+    }
+
+    public void removeByDepartment(int dep) {
+        Iterator<Entity> it = entities.iterator();
+        while (it.hasNext()) {
+            Person p = (Person) it.next();
+            if (p.getDepartment() == dep) {
+                it.remove();
+            }
         }
     }
 }

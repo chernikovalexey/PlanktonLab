@@ -1,6 +1,7 @@
 package lab.storage;
 
 import lab.Main;
+import lab.Validator;
 import lab.entity.Entity;
 import lab.entity.Person;
 import lab.entity.Student;
@@ -8,7 +9,6 @@ import lab.entity.Student;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Scanner;
 
 public class StudentStorage extends PersonStorage {
     {
@@ -28,56 +28,83 @@ public class StudentStorage extends PersonStorage {
         super("res/students.dat", Student.class);
     }
 
+    private String readName() {
+        System.out.print("Enter the full name: ");
+        String name = "";
+        while (!Validator.isCorrectFullName(name)) {
+            if (!name.isEmpty()) {
+                System.out.println("Bad input! Try again right now!");
+            }
+            name = Main.scanner.nextLine();
+        }
+        return Main.toUpperCaseFirstLetter(name);
+    }
+
     @Override
     public void add() {
-        System.out.print("Input department: ");
-        int department = Main.storages.get("department").findByName(Main.scanner.nextLine()).getId();
+        System.out.println("Enter an academic department:");
+        int department = Main.storages.get("department").getSelectedIdFromQuickMenu();
 
-        System.out.print("Input studing year: ");
+        System.out.print("Enter the year of study: ");
         int year = Main.scanner.nextInt();
 
-        System.out.print("Input name: ");
-        String name = new Scanner(System.in).nextLine();
-
+        String name = readName();
         addEntityFromLine(new Student(getNewId(), department, year, name).toString());
+
+        System.out.println("Added " + name + " to the database successfully.");
     }
 
     @Override
     public void edit() {
-        System.out.println("Input name, second or middle name: ");
-        String fullName = Main.toUpperCaseFirstLetter(new Scanner(System.in).nextLine());
-        ArrayList<Entity> students = smartFindByFullName(fullName);
+        System.out.println("Enter name, surname or middle name of the student, who is supposed to be edited: ");
+
+        ArrayList<Entity> students;
+        while ((students = smartFindByFullName(Main.scanner.nextLine())).size() == 0) {
+            System.out.println("Nobody has been found. Probably, you've made a typo? Try again, anyway!");
+        }
 
         if (students.size() > 1) {
-            printWithIndexes(students);
-            System.out.println("Input index of students: ");
+            System.out.print("Enter the index of the student from the list above: ");
         }
         Student st = (Student) students.get(students.size() > 1 ? Main.scanner.nextInt() - 1 : 0);
 
         st.print();
-        System.out.println("___________");
 
-        System.out.println("Input department: ");
-        String department = new Scanner(System.in).nextLine();
-        if (!department.trim().isEmpty()) {
-            st.setDepartment(Main.storages.get("department").findByName(department).getId());
+        System.out.println("......");
+
+        System.out.println("Do you want to change the department (y/n)?");
+        String department = Main.scanner.nextLine();
+        if (department.equals("y")) {
+            System.out.println("Select the department, then: ");
+            st.setDepartment(Main.storages.get("department").getSelectedIdFromQuickMenu());
         }
 
-        System.out.println("Input studying year: ");
-        String year = new Scanner(System.in).nextLine();
-        if (!year.trim().isEmpty()) { st.setYear(Integer.parseInt(year)); }
+        System.out.println("Do you want to change the year of study (y/n)?");
+        String year = Main.scanner.nextLine();
+        if (year.equals("y")) {
+            System.out.println("Enter the year, then: ");
+            st.setYear(Main.scanner.nextInt());
+        }
 
-        System.out.println("Input full name: ");
-        String name = new Scanner(System.in).nextLine();
-        if (!name.trim().isEmpty()) { st.setName(name); }
+        System.out.println("Do you want to change the name (y/n)?");
+        String name = Main.scanner.nextLine();
+        if (name.equals("y")) {
+            st.setName(readName());
+        }
+
+        System.out.println("Changes made and led to the following: ");
+        st.print();
     }
 
     @Override
     public void delete() {
-        System.out.print("Input name or surname or middle name: ");
+        System.out.println("Enter name, surname or middle name of the student, who is supposed to be deleted:");
         ArrayList<Entity> students = smartFindByFullName(Main.scanner.nextLine());
         printWithIndexes(students);
-        entities.remove(students.get(Main.scanner.nextInt() - 1));
+        System.out.print("Enter the index of the selected student from the list above: ");
+        Entity e = students.get(Main.scanner.nextInt() - 1);
+        entities.remove(e);
+        System.out.println(e.getName() + " just said 'Ciao!'");
     }
 
     private ArrayList<Entity> findByYear(int year) {
