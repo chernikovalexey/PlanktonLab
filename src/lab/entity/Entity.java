@@ -1,10 +1,5 @@
 package lab.entity;
 
-/**
- * Created by Alexey
- * At 6:59 PM on 3/1/14
- */
-
 public abstract class Entity {
     protected int id;
     protected String name;
@@ -27,7 +22,7 @@ public abstract class Entity {
         this.name = name;
     }
 
-	public void printEntity(Entity entity) {
-		System.out.println(entity.toString());
+	public void print() {
+		System.out.println(this);
 	}
 }

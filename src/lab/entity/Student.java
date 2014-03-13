@@ -2,38 +2,24 @@ package lab.entity;
 
 import lab.Main;
 
-/**
- * Created by Alexey
- * At 10:25 PM on 3/1/14
- */
-
 public class Student extends Person {
-    private int lectorn;
     private int year;
 
     public Student() {}
 
-    public Student(int id, int lectorn, int year, String name) {
+    public Student(int id, int department, int year, String name) {
         this.id = id;
-        this.lectorn = lectorn;
+        this.department = department;
         this.year = year;
         this.name = name;
     }
-    
+
     public int getYear() {
-    	return year;
+        return year;
     }
-    
+
     public void setYear(int year) {
-    	this.year = year;
-    }
-    
-    public int getLectorn() {
-    	return lectorn;
-    }
-    
-    public void setLectorn(int lectorn) {
-    	this.lectorn = lectorn;
+        this.year = year;
     }
 
     @Override
@@ -43,18 +29,13 @@ public class Student extends Person {
     }
 
     @Override
-    public void printEntity(Entity entity) {
-    	if (entity == null) return;
-    	
-    	Student st = (Student) entity;
-    	Entity lectorn = Main.storages.get("lectorn").findById(st.getLectorn());
-    	
-        System.out.println((lectorn == null ? st.getLectorn() : lectorn.getName()) + " " + st.getYear() + " studying year "+ st.getName() + " " + st.getSurname() + " " + st.getMiddleName());
+    public void print() {
+        Entity dep = Main.storages.get("department").findById(department);
+        System.out.println((dep == null ? department : dep.getName()) + " " + year + " studying year " + getName() + " " + getSurname() + " " + getMiddleName());
     }
 
     @Override
     public String toString() {
-        return id + " " + lectorn + " " + year + " " + getName() + " " + getSurname() + " " + getMiddleName();
+        return id + " " + department + " " + year + " " + getName() + " " + getSurname() + " " + getMiddleName();
     }
-
 }

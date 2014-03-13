@@ -1,22 +1,23 @@
 package lab.storage;
 
+import lab.Main;
 import lab.entity.Entity;
+import lab.entity.Person;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
-/**
- * Created by Alexey
- * At 6:57 PM on 3/1/14
- */
+import java.util.Comparator;
+import java.util.HashMap;
 
 public abstract class Storage {
     protected String fileName;
-    public ArrayList<Entity> entities = new ArrayList<Entity>();
+    protected ArrayList<Entity> entities = new ArrayList<Entity>();
     protected Entity entityInstance;
+
+    protected HashMap<String, Comparator<Entity>> comparators = new HashMap<String, Comparator<Entity>>();
 
     public Storage(String fileName, Class<? extends Entity> clazz) {
         this.fileName = fileName;
@@ -46,14 +47,8 @@ public abstract class Storage {
     }
 
     public void addEntityFromLine(String line) {
-        Entity entity = entityInstance.createInstanceFromLine(line);
-        entities.add(entity);
+        entities.add(entityInstance.createInstanceFromLine(line));
     }
-
-	public void printEntity(Entity ent) {
-		//System.out.println(entityInstance + "_");
-        entityInstance.printEntity(ent);
-	}
 
     public void add() {}
 
@@ -61,12 +56,17 @@ public abstract class Storage {
 
     public void delete() {}
 
+    public void find(String by) {}
+
+    public void print(String sortBy) {}
+
+    protected void readAndApplyFilter(ArrayList<Person> people) {}
+
     public int getNewId() {
         return entities.size() > 0 ? entities.get(entities.size() - 1).getId() + 1 : 1;
     }
 
     public Entity findByName(String name) {
-       //entities
         for (Entity e : entities) {
             if (e.getName().equals(name)) {
                 return e;
@@ -74,24 +74,33 @@ public abstract class Storage {
         }
         return null;
     }
-    
-    public Entity findById(int id) {
-        //entities
-         for (Entity e : entities) {
-             if (e.getId() == id) {
-                 return e;
-             }
-         }
-         return null;
-     }
 
-    public void printSort(ArrayList<Entity> entities) {
-    	int i=0;
-    	
-        for (Entity entity : entities) {
-            System.out.print(++i +") ");
-            printEntity(entity);
+    public Entity findById(int id) {
+        for (Entity e : entities) {
+            if (e.getId() == id) {
+                return e;
+            }
         }
+        return null;
+    }
+
+    public void printWithIndexes(ArrayList<Entity> entities) {
+        int i = 0;
+        for (Entity entity : entities) {
+            System.out.print(++i + ") ");
+            entity.print();
+        }
+    }
+
+    public int getSelectedIdFromQuickMenu() {
+        return getSelectedIdFromQuickMenu(entities);
+    }
+
+    public int getSelectedIdFromQuickMenu(ArrayList<Entity> ents) {
+        printWithIndexes(ents);
+        System.out.println("Select the item from the list above: ");
+        int selected = Main.scanner.nextInt();
+        return ents.get(selected - 1).getId();
     }
 
     public void save() {

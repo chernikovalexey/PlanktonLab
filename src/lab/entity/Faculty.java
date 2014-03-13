@@ -2,11 +2,6 @@ package lab.entity;
 
 import lab.Main;
 
-/**
- * Created by Alexey
- * At 7:07 PM on 3/1/14
- */
-
 public class Faculty extends Entity {
     public Faculty() {}
 
@@ -22,12 +17,8 @@ public class Faculty extends Entity {
     }
     
     @Override
-    public void printEntity(Entity entity) {
-    	if (entity == null) return;
-    	
-    	Faculty fac = (Faculty) entity;
-
-    	System.out.println(fac.getName());
+    public void print() {
+    	System.out.println(name);
     }
 
     @Override

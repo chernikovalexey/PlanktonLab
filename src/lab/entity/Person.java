@@ -1,11 +1,10 @@
 package lab.entity;
 
-/**
- * Created by Alexey
- * At 9:50 PM on 3/1/14
- */
+import lab.Main;
 
-public class Person extends Entity {
+public abstract class Person extends Entity {
+    protected int department;
+
     public String getName() {
         return name.split(" ")[0];
     }
@@ -16,5 +15,17 @@ public class Person extends Entity {
 
     public String getSurname() {
         return name.split(" ")[1];
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(int department) {
+        this.department = department;
+    }
+
+    public int getFaculty() {
+        return ((Department) Main.storages.get("department").findById(department)).getFaculty();
     }
 }
