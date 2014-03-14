@@ -6,6 +6,8 @@ import lab.storage.Storage;
 import lab.storage.StudentStorage;
 import lab.storage.TeacherStorage;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -18,6 +20,10 @@ public class Main {
         put("student", new StudentStorage());
         put("teacher", new TeacherStorage());
     }};
+
+    public interface ReadFileCallback {
+        public void readLine(String line);
+    }
 
     public static String joinArray(String[] arr, String with, int fromIndex) {
         StringBuilder builder = new StringBuilder();
@@ -43,6 +49,45 @@ public class Main {
         return result.toString();
     }
 
+    public static void readFile(String fileName, ReadFileCallback cb) {
+        try {
+            FileReader fr = new FileReader(fileName);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                cb.readLine(line);
+            }
+
+            br.close();
+            fr.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printHelp() {
+        readFile("res/help.txt", new ReadFileCallback() {
+            @Override
+            public void readLine(String line) {
+                System.out.println(line);
+            }
+        });
+    }
+
+    public static String readLine(String placeholder) {
+        if (!placeholder.isEmpty()) {
+            System.out.println(placeholder);
+        }
+        String str;
+        while (Validator.isEmpty(str = scanner.nextLine())) {}
+        return str;
+    }
+
+    public static String readLine() {
+        return readLine("");
+    }
+
     public static void main(String[] args) {
         for (Storage storage : storages.values()) {
             try {
@@ -52,6 +97,8 @@ public class Main {
             }
         }
 
+        printHelp();
+
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             if (line.length() > 0 && line.charAt(0) == '-') {
@@ -60,6 +107,9 @@ public class Main {
 
                 if (commandName.equals("exit")) {
                     break;
+                } else if (commandName.equals("help")) {
+                    printHelp();
+                    continue;
                 }
 
                 try {
@@ -70,7 +120,8 @@ public class Main {
                         storages.get(parts[1]).getClass().getMethod(commandName).invoke(storages.get(parts[1]));
                         storages.get(parts[1]).save();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        System.out.println("An error occurred. Perhaps, you've made a typo in the method name or specified not all arguments. Try again, anyway!");
+                        //e.printStackTrace();
                     }
                 }
             }

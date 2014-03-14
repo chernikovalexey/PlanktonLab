@@ -1,10 +1,8 @@
 package lab.storage;
 
 import lab.Main;
-import lab.entity.Entity;
+import lab.entity.Person;
 import lab.entity.Teacher;
-
-import java.util.ArrayList;
 
 public class TeacherStorage extends PersonStorage {
     public TeacherStorage() {
@@ -13,45 +11,32 @@ public class TeacherStorage extends PersonStorage {
 
     @Override
     public void add() {
-        System.out.println("Input department: ");
-        int department = Main.storages.get("department").findByName(Main.scanner.nextLine()).getId();
-
-        System.out.println("Input name: ");
-        String name = Main.scanner.nextLine();
+        int department = Main.storages.get("department").getSelectedIdFromQuickMenu("Enter an academic department:");
+        String name = readName();
 
         addEntityFromLine(new Teacher(getNewId(), department, name).toString());
+
+        System.out.println("Added " + name + " to the database successfully.");
     }
 
     @Override
     public void edit() {
-        System.out.println("Input name, second or middle name: ");
+        Person tch = readAndFindPerson();
 
-        ArrayList<Entity> teachers = smartFindByFullName(Main.scanner.nextLine());
-
-        if (teachers.size() > 1) { printWithIndexes(teachers); }
-        System.out.println("Input index of teacher: ");
-        Teacher tch = (Teacher) teachers.get(teachers.size() > 1 ? Main.scanner.nextInt() - 1 : 0);
-
-        tch.print();
-        System.out.println("___________");
-
-        System.out.println("Input new department: ");
-        String department = Main.scanner.nextLine();
-        if (!department.trim().isEmpty()) {
-            tch.setDepartment(Main.storages.get("department").findByName(department).getId());
+        System.out.println("Do you want to change the department (y/n)?");
+        String department = Main.readLine();
+        if (department.equals("y")) {
+            System.out.println("Select the department, then: ");
+            tch.setDepartment(Main.storages.get("department").getSelectedIdFromQuickMenu());
         }
 
-        System.out.println("Input new full name: ");
-        String name = Main.scanner.nextLine();
-        if (!name.trim().isEmpty()) { tch.setName(name); }
-    }
+        System.out.println("Do you want to change the name (y/n)?");
+        String name = Main.readLine();
+        if (name.equals("y")) {
+            tch.setName(readName());
+        }
 
-    @Override
-    public void delete() {
-        System.out.print("Input name or surname or middle Main.scanner: ");
-        ArrayList<Entity> teachers = smartFindByFullName(Main.scanner.nextLine());
-        printWithIndexes(teachers);
-        System.out.println("Input index of teacher ot delete: ");
-        entities.remove(teachers.get(Main.scanner.nextInt() - 1));
+        System.out.println("Changes made and led to the following: ");
+        tch.print();
     }
 }

@@ -17,4 +17,8 @@ public class Validator {
     public static boolean isCorrectFullName(String str) {
         return str != null && str.split(" ").length == 3 && hasOnlyWords(str);
     }
+
+    public static boolean isInRange(int num, int from, int to) {
+        return num >= from && num <= to;
+    }
 }

@@ -1,12 +1,11 @@
 package lab.storage;
 
 import lab.Main;
+import lab.Validator;
 import lab.entity.Entity;
 import lab.entity.Person;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,20 +29,12 @@ public abstract class Storage {
     }
 
     public void load() {
-        try {
-            FileReader fr = new FileReader(fileName);
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-
-            while ((line = br.readLine()) != null) {
+        Main.readFile(fileName, new Main.ReadFileCallback() {
+            @Override
+            public void readLine(String line) {
                 addEntityFromLine(line);
             }
-
-            br.close();
-            fr.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     public void addEntityFromLine(String line) {
@@ -58,21 +49,20 @@ public abstract class Storage {
 
     public void find(String by) {}
 
-    public void print(String sortBy) {}
+    public void print(String sortBy) {
+        if (entities.size() == 0) {
+            System.out.println("Storage is empty.");
+        } else {
+            for (Entity e : entities) {
+                e.print();
+            }
+        }
+    }
 
     protected void readAndApplyFilter(ArrayList<Person> people) {}
 
     public int getNewId() {
         return entities.size() > 0 ? entities.get(entities.size() - 1).getId() + 1 : 1;
-    }
-
-    public Entity findByName(String name) {
-        for (Entity e : entities) {
-            if (e.getName().equals(name)) {
-                return e;
-            }
-        }
-        return null;
     }
 
     public Entity findById(int id) {
@@ -93,13 +83,25 @@ public abstract class Storage {
     }
 
     public int getSelectedIdFromQuickMenu() {
-        return getSelectedIdFromQuickMenu(entities);
+        return getSelectedIdFromQuickMenu("");
     }
 
     public int getSelectedIdFromQuickMenu(ArrayList<Entity> ents) {
+        return getSelectedIdFromQuickMenu(ents, "");
+    }
+
+    public int getSelectedIdFromQuickMenu(String placeholder) {
+        return getSelectedIdFromQuickMenu(entities, placeholder);
+    }
+
+    public int getSelectedIdFromQuickMenu(ArrayList<Entity> ents, String placeholder) {
+        System.out.println(placeholder);
         printWithIndexes(ents);
         System.out.println("Select the item from the list above: ");
-        int selected = Main.scanner.nextInt();
+        int selected;
+        while (!Validator.isInRange(selected = Main.scanner.nextInt(), 1, ents.size())) {
+            System.out.println("Please, submit the index in the range from 1 to " + ents.size());
+        }
         return ents.get(selected - 1).getId();
     }
 

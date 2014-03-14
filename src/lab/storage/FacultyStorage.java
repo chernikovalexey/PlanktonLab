@@ -11,26 +11,26 @@ public class FacultyStorage extends Storage {
 
     @Override
     public void add() {
-        System.out.println("Enter the name of the faculty: ");
-        addEntityFromLine(new Faculty(getNewId(), Main.scanner.nextLine()).toString());
+        addEntityFromLine(new Faculty(getNewId(), Main.readLine("Enter the name of the faculty: ")).toString());
         System.out.println("Added.");
     }
 
     @Override
     public void edit() {
-        System.out.println("Select the faculty which is supposed to be edited:");
-        int fac = getSelectedIdFromQuickMenu();
+        int fac = getSelectedIdFromQuickMenu("Select the faculty which is supposed to be edited:");
         Entity entity = findById(fac);
-        System.out.println("The new name for it: ");
-        entity.setName(Main.scanner.nextLine());
+
+        String name = Main.readLine("The new name for it: ");
+        entity.setName(name);
+
         System.out.println("Edited.");
     }
 
     @Override
     public void delete() {
-        System.out.println("Select the faculty which you are intended to delete:");
-        int fac = getSelectedIdFromQuickMenu();
+        int fac = getSelectedIdFromQuickMenu("Select the faculty which you are intended to delete:");
         Entity entity = findById(fac);
+
         entities.remove(entity);
         System.out.println("There is no " + entity.getName() + " any more.");
     }

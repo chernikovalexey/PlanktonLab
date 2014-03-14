@@ -1,6 +1,7 @@
 package lab.storage;
 
 import lab.Main;
+import lab.Validator;
 import lab.entity.Entity;
 import lab.entity.Person;
 
@@ -54,10 +55,43 @@ public class PersonStorage extends Storage {
         return results;
     }
 
+    protected String readName() {
+        System.out.print("Enter the full name: ");
+        String name = "";
+        while (!Validator.isCorrectFullName(name)) {
+            if (!name.isEmpty()) {
+                System.out.println("Bad name input! The name may consist of 3 letter-only words. Try again!");
+            }
+            name = Main.readLine();
+        }
+        return Main.toUpperCaseFirstLetter(name);
+    }
+
+    protected Person readAndFindPerson() {
+        System.out.println("Enter name, surname or middle name of the student, who is supposed to be found:");
+        ArrayList<Entity> people;
+        while ((people = smartFindByFullName(Main.readLine())).size() == 0) {
+            System.out.println("Nobody has been found. Probably, you've made a typo? Try again, anyway!");
+        }
+
+        printWithIndexes(people);
+
+        if (people.size() > 1) {
+            System.out.print("Enter the index of the student from the list above: ");
+        }
+        Person p = (Person) people.get(people.size() > 1 ? Main.scanner.nextInt() - 1 : 0);
+        p.print();
+        System.out.println("......");
+
+        return p;
+    }
+
     @Override
     public void find(String by) {
         if (by.equals("name")) {
-            printWithIndexes(smartFindByFullName(Main.scanner.nextLine()));
+            printWithIndexes(smartFindByFullName(Main.readLine("Specify either name, surname or middle name: ")));
+        } else {
+            System.out.println("There is no such an option for search: '" + by + "'");
         }
     }
 
@@ -65,9 +99,7 @@ public class PersonStorage extends Storage {
     public void print(String sortBy) {
         sortBy = sortBy.toLowerCase();
 
-        System.out.println("Do you want to specify the faculty?");
-        String fDecision = Main.scanner.nextLine();
-
+        String fDecision = Main.readLine("Do you want to specify the faculty?");
         boolean facSpecified = false;
         int fac = 0;
         if (fDecision.equals("y")) {
@@ -75,10 +107,7 @@ public class PersonStorage extends Storage {
             fac = Main.storages.get("faculty").getSelectedIdFromQuickMenu();
         }
 
-        System.out.println("Do you want to specify the department?");
-        String dDecision;
-        while ((dDecision = Main.scanner.nextLine()).isEmpty()) {}
-
+        String dDecision = Main.readLine("Do you want to specify the department?");
         boolean depSpecified = false;
         int dep = 0;
         if (dDecision.equals("y")) {
@@ -105,8 +134,12 @@ public class PersonStorage extends Storage {
             Collections.sort(people, comparators.get(sortBy));
         }
 
-        for (Person s : people) {
-            s.print();
+        if (people.size() == 0) {
+            System.out.println("Nobody was found ...");
+        } else {
+            for (Person s : people) {
+                s.print();
+            }
         }
     }
 
@@ -118,5 +151,12 @@ public class PersonStorage extends Storage {
                 it.remove();
             }
         }
+    }
+
+    @Override
+    public void delete() {
+        Person st = readAndFindPerson();
+        entities.remove(st);
+        System.out.println(st.getName() + " just said 'Ciao!'");
     }
 }

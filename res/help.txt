@@ -1,0 +1,25 @@
+-=-=-=-=-=-=-=-=-=-
+PLANKTON DATABASE OH:
+
+'-help' to show a brief help
+
+Available types for the following commands: faculty, department, student, teacher.
+
+'-add type' to add an item
+
+'-edit type' to edit
+
+'-delete type' to delete the item.
+
+Types of order: name, surname, year (only for student).
+
+'-find type order' to find student or teacher
+
+'-print type order' to print all what's in the database for the specified query.
+
+A few examples:
+-add student
+-edit department
+-find student surname
+-print teacher name
+-=-=-=-=-=-=-=-=-=-

@@ -16,33 +16,25 @@ public class DepartmentStorage extends Storage {
         System.out.println("Select the faculty:");
         int fac = Main.storages.get("faculty").getSelectedIdFromQuickMenu();
         System.out.println("The name for the new academic department:");
-        String name;
-        while ((name = Main.scanner.nextLine()).isEmpty()) {}
+        String name = Main.readLine();
         addEntityFromLine(new Department(getNewId(), fac, name).toString());
         System.out.println("Added.");
     }
 
     @Override
     public void edit() {
-        System.out.println("Select the department which is supposed to be edited:");
-        int dep = Main.storages.get("department").getSelectedIdFromQuickMenu();
+        int dep = Main.storages.get("department").getSelectedIdFromQuickMenu("Select the department which is supposed to be edited:");
         Entity entity = findById(dep);
-        System.out.println("Do you want to change the faculty-appurtenance (y/n)?");
 
-        String d;
-        while ((d = Main.scanner.nextLine()).isEmpty()) {}
+        String d = Main.readLine("Do you want to change the faculty-appurtenance (y/n)?");
         if (d.equals("y")) {
-            System.out.println("Select the faculty, then:");
-            int fac = Main.storages.get("faculty").getSelectedIdFromQuickMenu();
+            int fac = Main.storages.get("faculty").getSelectedIdFromQuickMenu("Select the faculty, then:");
             ((Department) entity).setFaculty(fac);
         }
 
-        System.out.println("Do you want to change the name of it (y/n)?");
-        String d2;
-        while ((d2 = Main.scanner.nextLine()).isEmpty()) {}
+        String d2 = Main.readLine("Do you want to change the name of it (y/n)?");
         if (d2.equals("y")) {
-            System.out.println("Name, please:");
-            entity.setName(Main.scanner.nextLine());
+            entity.setName(Main.readLine("Name, please:"));
         }
 
         System.out.println("Edited.");
@@ -57,7 +49,7 @@ public class DepartmentStorage extends Storage {
 
         // remove students of this dep
         ((StudentStorage) Main.storages.get("student")).removeByDepartment(dep);
-        Main.storages.get("students").save();
+        Main.storages.get("student").save();
 
         // remove teachers of this dep
         ((StudentStorage) Main.storages.get("teacher")).removeByDepartment(dep);
